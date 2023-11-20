@@ -14,22 +14,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# enter path
-path_multi = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\S2B_33UXP2BP_230505_ICE_DECODED.TIF'
-path_hyper = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\ENMAP_33UXP_230504T101024_PRE_IVPARA.TIF'
-path_out = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\33UXP_FUSED.TIF'
-
-# define resampling method
-#resampling=rasterio.enums.Resampling.bilinear
-resampling_method = 'average' #average, #nearest, #cubic
-
-# define bands of LAI hyperspectral
-# S2 band 2 = LAI, ENMAP band 4 = LAI
-bands = [4]
-
-# run reproj2base
-reproj2base(inpath=path_hyper, basepath=path_multi, outpath=path_out, bands=bands, resampling_method=resampling_method)
-
+# Define function
 def reproj2base(inpath, basepath, outpath, bands=None, resampling_method='nearest', plot=False):
     """
     Transform raster file to match the shape and projection of existing raster.
@@ -149,3 +134,20 @@ def reproj2base(inpath, basepath, outpath, bands=None, resampling_method='neares
         plt.colorbar()
         plt.title("DST DATA")
         plt.show()
+
+if __name__ == 'main':
+    # enter path
+    path_multi = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\S2B_33UXP2BP_230505_ICE_DECODED.TIF'
+    path_hyper = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\ENMAP_33UXP_230504T101024_PRE_IVPARA.TIF'
+    path_out = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\33UXP_FUSED.TIF'
+
+    # define resampling method
+    #resampling=rasterio.enums.Resampling.bilinear
+    resampling_method = 'average' #average, #nearest, #cubic
+
+    # define bands of LAI hyperspectral
+    # S2 band 2 = LAI, ENMAP band 4 = LAI
+    bands = [4]
+
+    # run reproj2base
+    reproj2base(inpath=path_hyper, basepath=path_multi, outpath=path_out, bands=bands, resampling_method=resampling_method)
