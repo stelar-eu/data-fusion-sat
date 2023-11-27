@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 # Define function
 def reproj2base(inpath, basepath, outpath, bands=None, resampling_method='nearest', plot=False):
     """
-    Transform raster file to match the shape and projection of existing raster.
+    Transform raster file to match the shape and projection of existing raster (co-registration).
 
     Inputs
     ----------
@@ -139,15 +139,63 @@ if __name__ == 'main':
     # enter path
     path_multi = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\S2B_33UXP2BP_230505_ICE_DECODED.TIF'
     path_hyper = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\ENMAP_33UXP_230504T101024_PRE_IVPARA.TIF'
-    path_out = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\33UXP_FUSED.TIF'
+    path_out = 'Q:\\_STELAR\\Sammlung\\Test_Data\\DATA-FUSION\\LAI-Compare\\'
 
     # define resampling method
     #resampling=rasterio.enums.Resampling.bilinear
-    resampling_method = 'average' #average, #nearest, #cubic
+    resampling_method = 'nearest' #average, #nearest, #cubic, #'bilinear'
 
     # define bands of LAI hyperspectral
     # S2 band 2 = LAI, ENMAP band 4 = LAI
     bands = [4]
 
+    out_name = path_out + path_hyper[path_hyper.rfind('\\')+1:len(path_hyper)-14] + resampling_method + '_FUSED.TIF'
+
     # run reproj2base
-    reproj2base(inpath=path_hyper, basepath=path_multi, outpath=path_out, bands=bands, resampling_method=resampling_method)
+    reproj2base(inpath=path_hyper, basepath=path_multi, outpath=out_name, bands=bands, resampling_method=resampling_method)
+
+    # plot fused data and original data
+    import rasterio
+    import matplotlib.pyplot as plt
+    import matplotlib
+
+    # plot fused hyperspectral (enmap) data
+    with rasterio.open(out_name, 'r') as hyper:
+        hyper_data = hyper.read(1)
+    plt.figure(figsize=(8,8))
+    #cmap = matplotlib.colors.ListedColormap(['red', 'green'])
+    plt.imshow(hyper_data[:, :], vmin=0, vmax=7)
+    plt.colorbar()
+    plt.title("ENMAP FUSED LAI")
+    plt.savefig('ENMAP_FUSED_LAI.PNG')
+    plt.show()
+
+    # plot multispectra (sentinel-2) baseline data
+    with rasterio.open(path_multi, 'r') as multi:
+        multi_data = multi.read(2)
+    plt.figure(figsize=(8,8))
+    #cmap = matplotlib.colors.ListedColormap(['red', 'green'])
+    plt.imshow(multi_data[:, :], vmin=0, vmax=7)
+    plt.colorbar()
+    plt.title("SENTINEL-2 LAI")
+    plt.savefig('SENTINEL2_LAI.PNG')
+    plt.show()
+
+    # nodata to all negative values
+    hyper_data[hyper_data<0] = np.nan
+    multi_data[multi_data<0] = np.nan
+
+    # ceate differeence plot (absolute error)
+    plt.figure(figsize=(8,8))
+    plt.imshow(hyper_data-multi_data, vmin=0, vmax=1)
+    plt.colorbar()
+    plt.title("DIFF Hyper - Multi LAI")
+    plt.savefig('DiffHyperMulti_LAI.PNG')
+    plt.show()
+
+    # create scatter plot to compare both LAIs
+    plt.figure(figsize=(8,8))
+    plt.scatter(x=hyper_data[3750:3800,450:500], y=multi_data[3750:3800,450:500])
+    plt.title("SCATTER Hyper - Multi LAI")
+    plt.savefig('ScatterHyperMulti_LAI.PNG')
+    plt.show()
