@@ -1,11 +1,10 @@
 """
-    Implementation of STARFM via github rep starfm4py by Nikolina Mileva.
+    Implementation of STARFM via github rep starfm4py by Nikolina Mileva (https://github.com/nmileva/starfm4py).
     Preprocessing (co-registration is performed first)
 
     @author: C. Jörges, VISTA GmbH
     Date: 11/23
 
-    To DO: Add reading RAS Files instead of TIF Files (use existing code)
 """
 
 # import packages

@@ -4,10 +4,9 @@
         (1) co-registration via gdal
         (2) spectral + spatial fusion to obtain S2 geometry with hyperspectral information
 
-    @author: C. Jörges
+    @author: C. Jörges, VISTA GmbH
     Date: 11/23
 
-    To DO: Add reading RAS Files instead of TIF Files (use existing code)
 """
 
 # load packages
@@ -28,6 +27,7 @@ def reproj2base(inpath, basepath, outpath, bands=None, resampling_method='neares
     resampling_method : (string) 'nearest', 'bilinear', 'cubic', 'average'
     plot : (bool) plot the data?
     """
+    # ToDo: Add reading RAS Files instead of TIF Files (use existing code)
 
     # load packages
     import numpy as np
