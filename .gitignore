@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+lai_data_fusion.py
+lai_starfm.py
 # Distribution / packaging
 .Python
 build/
